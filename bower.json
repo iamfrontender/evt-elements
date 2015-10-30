@@ -1,0 +1,26 @@
+{
+  "name": "evt-elements",
+  "authors": [
+    "EVRYTHNG team"
+  ],
+  "description": "Collection of EVRYTHNG compatible elements for Polymer ^1.0.0",
+  "main": "index.html",
+  "moduleType": [],
+  "keywords": [
+    "web-component",
+    "evrythng",
+    "polymer"
+  ],
+  "license": "Apache 2.0",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-elements": "~1.0.4"
+  }
+}
