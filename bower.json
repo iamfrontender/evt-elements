@@ -1,10 +1,11 @@
 {
   "name": "evt-elements",
+  "version": "0.2.1",
+  "main": "index.html",
   "authors": [
     "EVRYTHNG team"
   ],
   "description": "Collection of EVRYTHNG compatible elements for Polymer ^1.0.0",
-  "main": "index.html",
   "moduleType": [],
   "keywords": [
     "web-component",
@@ -20,7 +21,18 @@
     "test",
     "tests"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iamfrontender/evt-elements.git"
+  },
   "dependencies": {
-    "iron-elements": "~1.0.4"
+    "iron-elements": "PolymerElements/iron-elements#^1.0.0",
+    "neon-elements": "PolymerElements/neon-elements#^1.0.0",
+    "paper-elements": "PolymerElements/paper-elements#^1.0.1",
+    "platinum-elements": "PolymerElements/platinum-elements#^1.1.0",
+    "polymer": "Polymer/polymer#^1.2.0",
+    "evrythng": "~3.3.2",
+    "bower-mqttws": "~1.0.0",
+    "evrythng-ws": "~1.0.1"
   }
 }
