@@ -1,0 +1,30 @@
+<dom-module id="evt-thng-actions">
+  <template>
+
+    <div class="empty"></div>
+    <template is="dom-repeat" items="{{actionTypes}}" as="action">
+      <evt-thng-action thng="{{thng}}" action="{{action}}" user="{{user}}"></evt-thng-action>
+    </template>
+  </template>
+  <script>
+    EvtElements.ThngActions = Polymer({
+      is: 'evt-thng-actions',
+
+      behavior: [
+        EvtElements.behaviors.thng,
+        EvtElements.behaviors.user
+      ],
+
+      properties: {
+        user: {
+          type: Object,
+          observer: 'fetchActionTypes'
+        },
+        thng: {
+          type: Object,
+          observer: 'fetchActionTypes'
+        }
+      }
+    });
+  </script>
+</dom-module>

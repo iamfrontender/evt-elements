@@ -1,0 +1,26 @@
+<script>
+  EvtElements.behaviors.user = {
+
+    actionTypes: [],
+
+    hasActionTypes: function() {
+      return this.actionTypes.length !== 0;
+    },
+
+    fetchActionTypes: function() {
+      if (this.user && !this.hasActionTypes()) {
+        var $this = this;
+
+        this.user.actionTypes().read({
+          localhost: true
+        }).then(function actionTypesFetched(actionTypes) {
+          $this.actionTypes = actionTypes.filter(this._customActionTypesFilter);
+        })
+      }
+    },
+
+    _customActionTypesFilter: function(actionType) {
+      return actionType.charAt(0) === '_';
+    }
+  };
+</script>

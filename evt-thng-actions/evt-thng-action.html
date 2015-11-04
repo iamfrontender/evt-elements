@@ -1,0 +1,34 @@
+<dom-module id="evt-thng-action">
+  <template>
+
+    <section class="thng-action layout vertical">
+      <div class="thng-action__details">
+
+        <div class="thng-action__icon">
+          <iron-icon icon="{{getActionIcon(action)}}"></iron-icon>
+        </div>
+        <div class="thng-action__name">{{getActionIcon(action)}}</div>
+
+      </div>
+
+      <aside class="thng-action__action">
+        <paper-icon-button icon="image:flash-on" on-tap="_createAction"></paper-icon-button>
+      </aside>
+    </section>
+
+  </template>
+  <script>
+    EvtElements.ThngAction = Polymer({
+      is: 'evt-thng-action',
+
+      behaviors: [
+        EvtElements.behaviors.user,
+        EvtElements.behaviors.action
+      ],
+
+      _actionCreated: function() {
+        this.fire('thng-action-created', this.action);
+      }
+    })
+  </script>
+</dom-module>

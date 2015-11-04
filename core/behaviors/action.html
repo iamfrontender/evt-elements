@@ -1,0 +1,20 @@
+<script>
+  EvtElements.behaviors.action = {
+
+    getActionName: function (action) {
+      return action.customFields.displayname || action.name;
+    },
+
+    getActionIcon: function (action) {
+      return action.customFields.icon || 'polymer'
+    },
+
+    _createAction: function() {
+      this.thng.action(this.action.name).create({
+        user: this.user.id
+      }, {
+        localhost: true
+      }).then((this._actionCreated || EvtElements.utils.noop).bind(this))
+    }
+  };
+</script>

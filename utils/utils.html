@@ -2,7 +2,21 @@
   /**
    * Core utils namespace.
    */
-  EvtElements.utils = {};
-</script>
+  EvtElements.utils = {
 
-<link rel="import" href="string.html">
+    /**
+     * No operation function.
+     */
+    noop: function noop() {},
+
+    /**
+     * 'hello' -> 'Hello'.
+     *
+     * @param {String} string
+     * @returns {string}
+     */
+    capitalize: function (string) {
+      return string.charAt(0).toLocaleUpperCase() + string.slice(1);
+    }
+  };
+</script>

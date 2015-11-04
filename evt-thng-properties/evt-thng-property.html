@@ -40,7 +40,7 @@
       _createEditor: function(type) {
         var Editor;
 
-        type = 'Thng' + EvtElements.utils.string.capitalize((type || 'string')) + 'Property';
+        type = 'Thng' + EvtElements.utils.capitalize((type || 'string')) + 'Property';
         Editor = EvtElements[type] || EvtElements.ThngStringProperty;
 
         return new Editor({
