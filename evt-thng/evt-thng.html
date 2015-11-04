@@ -1,0 +1,56 @@
+<link rel="import" href="evt-thng-card.html">
+<link rel="import" href="evt-thng-full.html">
+
+<dom-module id="evt-thng">
+  <template>
+    <div id="container"></div>
+  </template>
+  <script>
+    EvtElements.Thng = Polymer({
+      is: 'evt-thng',
+
+      MODES: {
+        'card': 'ThngCard',
+        'full': 'ThngFull'
+      },
+
+      properties: {
+        mode: {
+          type: String,
+          observer: '_modeChanged',
+          value: 'card'
+        },
+
+        thng: {
+          type: Object,
+          observer: '_modeChanged'
+        }
+      },
+
+      behaviors: [
+        EvtElements.behaviors.clear,
+        EvtElements.behaviors.thng
+      ],
+
+      factoryImpl: function(config) {
+        this.thng = config.thng;
+        this.mode = config.mode || 'card';
+      },
+
+      _modeChanged: function() {
+        this.setMode(this.mode);
+      },
+
+      setMode: function(mode) {
+        if (this.MODES[mode]) {
+          var thngEl = new EvtElements[this.MODES[mode]]({
+            thng: this.thng
+          });
+
+          this.clear('container');
+          this.$.container.appendChild(thngEl);
+        }
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,62 @@
+<link rel="import" href="evt-thng-string-property.html"/>
+<link rel="import" href="evt-thng-boolean-property.html"/>
+
+<dom-module id="evt-thng-property">
+  <template>
+    <link rel="stylesheet" href="evt-thng-property.css">
+
+    <div id="propertyContainer" class="item"></div>
+  </template>
+  <script>
+    EvtElements.ThngProperty = Polymer({
+      is: 'evt-thng-property',
+
+      properties: {
+        property: {
+          type: Object,
+          observer: '_propertyChanged'
+        }
+      },
+
+      behaviors: [
+        EvtElements.behaviors.clear
+      ],
+
+      _propertyChanged: function() {
+        this.clear('propertyContainer');
+
+        if (this.property.meta) {
+          this._loadFromMeta();
+        } else {
+          this._loadDefault();
+        }
+      },
+
+      load: function(property) {
+        this.property = property;
+      },
+
+      _loadFromMeta: function () {
+        var type = this.property.meta.type;
+
+        this.$.propertyContainer.appendChild(this._createEditor(type, this.property));
+      },
+
+      _loadDefault: function() {
+        this.$.propertyContainer.appendChild(this._createEditor('string', this.property));
+      },
+
+      _createEditor: function(type) {
+        var Editor;
+
+        type = 'Thng' + EvtElements.utils.string.capitalize(type) + 'Property';
+        Editor = EvtElements[type] || EvtElements.ThngStringProperty;
+
+        return new Editor({
+          property: this.property,
+          thng: this.thng
+        });
+      }
+    });
+  </script>
+</dom-module>

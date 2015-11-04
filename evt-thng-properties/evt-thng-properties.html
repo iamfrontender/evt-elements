@@ -1,0 +1,306 @@
+<link rel="import" href="evt-thng-property.html"/>
+
+<dom-module id="evt-thng-properties">
+  <template>
+    <section class="layout vertical">
+      <div hidden$="{{hasProperties(thng)}}" class="item empty self-center">
+        No Properties
+      </div>
+
+      <template is="dom-repeat" items="{{listProperties(thng)}}" as="propertyName">
+        <evt-thng-property property="{{getProperty(propertyName)}}" thng="{{thng}}"></evt-thng-property>
+      </template>
+    </section>
+  </template>
+  <script>
+    EvtElements.ThngProperties = Polymer({
+      is: 'evt-thng-properties',
+
+      behaviors: [
+        EvtElements.behaviors.access,
+        EvtElements.behaviors.thng
+      ],
+
+      properties: {
+        thng: {
+          type: Object,
+          observer: 'thngChanged'
+        }
+      },
+
+      loopInterval: null,
+
+      getType: function (input) {
+        return typeof input === 'string' ? 'text' : 'number';
+      },
+
+      selectProperty: function (key) {
+        for(var i = 0; i < this.properties.length; i++){
+          if(this.properties[i].key === key){
+            this.selected = this.properties[i];
+            this.selected.inputType = this.getType(this.selected.value);
+            this.selected.inputValue = this.selected.value;
+            break;
+          }
+        }
+      },
+
+      refresh: function () {
+        var $this = this;
+        this.thng.property().read({
+          localhost: true
+        }).then(function (properties) {
+          var colorX, colorY;
+
+          $this.properties = properties;
+          $this.properties.forEach(function (prop) {
+            prop.isBoolean = typeof prop.value === 'boolean';
+            prop.isFakeBoolean = prop.key === 'state' || prop.key === 'status' || prop.key === 'muted';
+            prop.isSlider = prop.key === 'brightness' || prop.key === 'volume';
+            prop.isColor = false;
+
+            prop.value = $this.processModelValue(prop);
+
+            if(typeof prop.value === 'object'){
+              prop.value = JSON.stringify(prop.value);
+            }
+
+            if(prop.key === '_color_x'){
+              colorX = prop.value;
+            } else if (prop.key === '_color_y'){
+              colorY = prop.value;
+            }
+          });
+
+          if(colorX && colorY){
+            var color = $this.colors.find(function (colors) {
+                return colors['_color_x'] === colorX && colors['_color_y'] === colorY;
+              }) || $this.colors[0];
+
+            $this.properties.push({
+              key: 'color',
+              value: color.value,
+              name: color.name,
+              isColor: true
+            });
+
+            $this.immediateColor = color.name;
+          }
+        });
+      },
+
+      thngChanged: function () {
+        var $this = this;
+        if(this.thng){
+          if(parseInt(this.polling) !== 0){
+            //this.loopInterval = setInterval(this.refresh.bind(this), this.polling);
+          } else {
+
+            // If polling interval is 0, subscribe via WebSockets.
+            this.refresh();
+            this.thng.property().subscribe(function(updatedProperties) {
+              if (Array.isArray(updatedProperties)) {
+                $this.addUpdatedProperties(updatedProperties);
+              } else {
+                $this.addUpdatedProperty(updatedProperties);
+              }
+            }, function() {
+              console.log('Subscribed to: ' + $this.thng.resource.path);
+            });
+          }
+        } else {
+          this.properties = [];
+          //clearTimeout(this.loopInterval);
+        }
+      },
+
+      booleanFirst: function (input) {
+        var lastBooleanIndex = 0,
+          ret = [];
+
+        for(var i = 0; i< input.length; i++){
+          if(input[i].isBoolean || input[i].isFakeBoolean){
+            ret.splice(lastBooleanIndex++, 0, input[i]);
+          } else {
+            ret.push(input[i]);
+          }
+        }
+
+        return ret;
+      },
+
+      noHidden: function (input) {
+        return input.filter(function (prop) {
+          return prop.key[0] !== '_';
+        });
+      },
+
+      openDialog: function (event, detail, target) {
+        this.selectProperty(target.attributes['data-property-key'].value);
+
+        this.$.newValueDecorator.isInvalid = false;
+
+        this.$.propertyDialog.open();
+      },
+
+      updateProperty: function () {
+        if(this.$.newValue.validity.valid){
+          var $this = this,
+            value = this.$.newValue.value,
+            type = this.$.newValue.type;
+
+          // validate number in text input
+          if(type === 'text' && !isNaN(value)){
+            this.$.newValueDecorator.isInvalid = true;
+            return;
+          }
+
+          if(type === 'number'){
+            value = parseInt(value);
+          }
+
+          this.thng.property(this.selected.key).update(value, {
+            localhost: true
+          }).then(function (updated) {
+            $this.selected.value = updated[0].value;
+            $this.selected = null;
+
+            $this.$.propertyDialog.close();
+            $this.$.toast.show();
+          });
+        }
+      },
+
+      toggleProperty: function (event, detail, target) {
+        this.selectProperty(target.attributes['data-property-key'].value);
+
+        var $this = this,
+          value = target.checked;
+
+        // Fake boolean properties do not use true/false, but on/off strings
+        if(target.attributes['data-property-fake'].value){
+          value = $this.processViewValue({
+            isFakeBoolean: true,
+            value: value
+          });
+        }
+
+        this.thng.property(this.selected.key).update(value, {
+          localhost: true
+        }).then(function () {
+          $this.selected = null;
+          $this.$.toast.show();
+        });
+      },
+
+      updateSlider: function (event, detail, target) {
+        this.selectProperty(target.attributes['data-property-key'].value);
+
+        var $this = this,
+          value = parseInt(target.value);
+
+        this.thng.property(this.selected.key).update(value, {
+          localhost: true
+        }).then(function () {
+          $this.selected = null;
+          $this.$.toast.show();
+        });
+      },
+
+      updateColor: function (event, details, target) {
+        this.selectProperty(target.attributes['data-property-key'].value);
+
+        var $this = this,
+          value = parseInt(target.value),
+          color = $this.colors[value];
+
+        this.selected.name = color.name;
+
+        this.thng.property().update({
+          '_color_x': color['_color_x'],
+          '_color_y': color['_color_y']
+        }, {
+          localhost: true
+        }).then(function () {
+          $this.selected = null;
+          $this.$.toast.show();
+        });
+      },
+
+      updateImmediateColor: function (event, details, target) {
+        this.immediateColor = this.colors[target.immediateValue].name;
+        console.log(this.immediateColor);
+      },
+
+      addUpdatedProperties: function (updatedProperties) {
+        var $this = this;
+
+        updatedProperties.forEach(function (p) {
+          $this.addUpdatedProperty(p);
+        });
+
+        this.convertColor();
+      },
+
+      addUpdatedProperty: function (updatedProperty) {
+        var match = null;
+
+        for (var i = 0; i < this.properties.length; i++) {
+          if (this.properties[i].key === updatedProperty.key) {
+            match = this.properties[i];
+          }
+        }
+
+        // Updating values for existing properties.
+        if (match) {
+          match.value = updatedProperty.value;
+          match.value = this.processModelValue(match);
+        }
+      },
+
+      processModelValue: function (property) {
+        if(property.isFakeBoolean){
+          return property.value === 'on'? true : false;
+        } else {
+          return property.value;
+        }
+      },
+
+      processViewValue: function (property) {
+        if(property.isFakeBoolean){
+          return property.value? 'on' : 'off';
+        } else {
+          return property.value;
+        }
+      },
+
+      convertColor: function () {
+        var colorX, colorY;
+
+        this.properties.forEach(function (prop) {
+          if(prop.key === '_color_x'){
+            colorX = prop.value;
+          } else if (prop.key === '_color_y'){
+            colorY = prop.value;
+          }
+        });
+
+        if(colorX && colorY){
+          var color = this.colors.find(function (colors) {
+            return colors['_color_x'] === colorX && colors['_color_y'] === colorY;
+          });
+
+          if(color){
+            var colorProperty = this.properties.find(function (prop) {
+              return prop.key === 'color';
+            });
+            colorProperty.value = color.value;
+            colorProperty.name = color.name;
+
+            this.immediateColor = colorProperty.name;
+          }
+        }
+      }
+    });
+  </script>
+</dom-module>

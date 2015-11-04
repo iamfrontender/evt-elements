@@ -1,0 +1,83 @@
+<script>
+  /**
+   * Thng behavior.
+   * Has abstract methods to retrieve the data values from thng model.
+   *
+   * TODO: Extend this behavior from access.
+   * @remark requires EvtElements.behaviors.access
+   *
+   * @behavior
+   */
+  EvtElements.behaviors.thng = {
+
+    /**
+     * Returns true if thng on this element has at least one property.
+     * Useful for hidden$ and other attributes with computed bindings.
+     *
+     * @returns {boolean}
+     */
+    hasProperties: function() {
+      if (this.thng) {
+        return this.listProperties().length !== 0;
+      }
+    },
+
+    /**
+     * Lists the properties of this thng.
+     *
+     * @returns {String[]}
+     */
+    listProperties: function() {
+      if (this.thng && this._keys) {
+        return this._keys(this, 'thng.properties', []);
+      }
+    },
+
+    /**
+     * Returns a unified property DTO, useful for attaching to nested elements.
+     *
+     * @param {String} name property name, i.e. one of thng.properties keys.
+     *
+     * @returns {name: string, value: *, meta: object}
+     */
+    getProperty: function(name) {
+      if (this.thng) {
+        var raw = this.thng.properties[name];
+
+        if (this._isValue(raw)) {
+          return {
+            name: name,
+            value: raw,
+            meta: this._getMeta(name)
+          };
+        }
+      }
+    },
+
+    /**
+     * Checks whether value is defined, i.e. not null and not undefined.
+     * @param {*} value
+     *
+     * @returns {boolean}
+     */
+    _isValue: function(value) {
+      return !_.isNull(value) && !_.isUndefined(value);
+    },
+
+    /**
+     * Retrieves the meta for property if any.
+     *
+     * @param {String} name Name of the property to look meta for (metaphor :D)
+     *
+     * @returns {*}
+     */
+    _getMeta: function(name) {
+      // TODO: Abstract Data Structures descriptors??
+      // Yet pretty heavy and complex, will allow to support any count of data formats.
+      // Not reliable if data structure will be fixed any time soon.
+      if (this.thng) {
+        return _.get(this.thng, 'customFields.' + name + '.values');
+      }
+    }
+  };
+</script>

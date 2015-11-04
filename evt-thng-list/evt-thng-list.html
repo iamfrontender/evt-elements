@@ -1,0 +1,106 @@
+<link rel="import" href="../evt-thng/evt-thng.html"/>
+
+<dom-module id="evt-thng-list">
+  <template>
+
+    <div class="empty-message self-center" hidden$={{thngs.length}}>
+      No devices yet
+    </div>
+
+    <iron-list items="{{thngs}}" as="thng" id="list" indexAs="id" selection-enabled>
+      <template>
+        <!--<devices-list-item>
+          <iron-image src="{{thng.product.photos.0}}" preload sizing="cover"></iron-image>
+          <div class="title">{{thng.name}}</div>
+          <div class="subtitle">{{thng.id}}</div>
+        </devices-list-item>-->
+        <evt-thng-card thng="{{thng}}"></evt-thng-card>
+      </template>
+    </iron-list>
+  </template>
+  <script>
+    EvtElements.ThngList = Polymer({
+      is: 'evt-thng-list',
+
+      properties: {
+        selectedItem: {
+          type: Object,
+          notify: true
+        },
+        user: {
+          type: Object,
+          observer: 'refresh'
+        },
+        thng: {
+          type: Object,
+          observer: 'refresh'
+        }
+      },
+
+      listeners: {
+        'list.selected-item-changed': '_selectionChanged'
+      },
+
+      ready: function() {
+        this.refresh();
+
+        this.$.list.fire('iron-resize');
+      },
+
+      refresh: function () {
+        if (this.user && !this.thngs) {
+          var $this = this;
+
+          this.user.thng().read({
+            localhost: true
+          }).then(function (thngs) {
+            $this.thngs = thngs;
+
+            var productIds = [];
+            thngs.forEach(function (thng) {
+              if(thng.product && productIds.indexOf(thng.product) === -1){
+                productIds.push(thng.product);
+              }
+
+              // TODO: Development only
+              if (thng.properties.status) {
+                thng.customFields = {
+                  status: {
+                    values: {
+                      type: 'boolean'
+                    }
+                  }
+                };
+              }
+            });
+
+            $this.user.product().read({
+              params: {
+                ids: productIds.join(',')
+              }
+            }).then(function (products) {
+              $this.thngs.forEach(function (thng) {
+                products.forEach(function (product) {
+                  if(products){
+                    if(thng.product === product.id){
+                      thng.product = product;
+                    }
+                  }
+                });
+
+                if(typeof thng.product === 'string'){
+                  thng.product = null;
+                }
+              });
+            });
+
+          });
+        }
+      },
+
+      _selectionChanged: function(e) {
+        this.fire('thng-selected', e.detail.value);
+      }
+    });
+  </script>
+</dom-module>

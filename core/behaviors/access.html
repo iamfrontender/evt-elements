@@ -1,0 +1,52 @@
+<script>
+  /**
+   * Nested property access behavior. Polymer ^1.0 lowered the expressions power,
+   * so almost any complex action should be implemented via computed properties.
+   * This module implements the common base for such an actions.
+   *
+   * @behavior
+   */
+  EvtElements.behaviors.access = {
+
+    /**
+     * Checks whether the source object has nested property and it's not empty.
+     *
+     * @param {Object} source Any object-like entity (Object, Array, Function, etc.)
+     * @param {String} property path to the nested property, 'some.nested.property.with.0.index'
+     *
+     * @returns {boolean} Whether the object has this property.
+     */
+    _has: function (source, property) {
+      return _.has(source, property) && !_.isEmpty(_.get(source, property));
+    },
+
+    /**
+     * Retrieves the nested object property value by its path.
+     * If the source is not exist, or path is not present, returns default value.
+     *
+     * @param {Object} source Any object-like entity (Object, Array, Function, etc.)
+     * @param {String} property path to the nested property, 'some.nested.property.with.0.index'
+     * @param {*} [defaultValue=undefined] The value to be returned in case, there is no requested property.
+     *
+     * @returns {*}
+     */
+    _get: function (source, property, defaultValue) {
+      if (source) {
+        return _.get(source, property) || defaultValue;
+      } else {
+        return defaultValue;
+      }
+    },
+
+    /**
+     * Returns keys of nested property in source object.
+     *
+     * @param {Object} source
+     * @param {String} property
+     * @returns {String[]} keys of property object
+     */
+    _keys: function (source, property) {
+      return Object.keys(this._get(source, property, []));
+    }
+  };
+</script>

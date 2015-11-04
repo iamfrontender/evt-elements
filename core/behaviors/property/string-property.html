@@ -1,0 +1,11 @@
+<script>
+  EvtElements.behaviors.property.string = {
+    _stringify: function() {
+      if (this.property && this.property.value) {
+        return this.property.value;
+      } else {
+        return '';
+      }
+    }
+  };
+</script>

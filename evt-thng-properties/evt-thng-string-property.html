@@ -1,0 +1,77 @@
+<dom-module id="evt-thng-string-property">
+  <template>
+    <section class="thng-property layout horizontal">
+      <div class="thng-property__details flex">
+        <div class="thng-property__name">{{property.name}}</div>
+        <div class="thng-property__value">{{property.value}}</div>
+      </div>
+
+      <aside class="thng-property__action icon-container layout horizontal">
+        <paper-icon-button on-tap="_openEditor" icon="editor:mode-edit" class="self-center"></paper-icon-button>
+      </aside>
+
+      <paper-dialog id="editor" with-backdrop>
+        <h2>{{property.name}}</h2>
+        <paper-input
+          label="{{property.name}}"
+          value="{{property.value}}"
+          required
+          placeholder="Property value"
+        ></paper-input>
+
+        <div class="buttons">
+          <paper-button dialog-dismiss><iron-icon icon="close"></iron-icon></paper-button>
+          <paper-button dialog-confirm><iron-icon icon="check"></iron-icon></paper-button>
+        </div>
+      </paper-dialog>
+    </section>
+  </template>
+  <script>
+    EvtElements.ThngStringProperty = Polymer({
+      is: 'evt-thng-string-property',
+
+      behaviors: [
+        EvtElements.behaviors.property.string
+      ],
+
+      properties: {
+        property: {
+          type: Object
+        }
+      },
+
+      factoryImpl: function(config) {
+        this.thng = config.thng;
+        this.property = config.property;
+      },
+
+      ready: function() {
+        this.$.editor.animationConfig = {
+          'entry': [{
+            name: 'scale-up-animation',
+            node: this.$.editor
+          }],
+          'exit': [{
+            name: 'slide-up-animation',
+            node: this.$.editor
+          }, {
+            name: 'fade-out-animation',
+            node: this.$.editor
+          }]
+        };
+      },
+
+      observers: [
+        '_propertyValueChanged(property.value)'
+      ],
+
+      _propertyValueChanged: function () {
+
+      },
+
+      _openEditor: function () {
+        this.$.editor.open();
+      }
+    });
+  </script>
+</dom-module>

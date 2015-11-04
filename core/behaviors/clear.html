@@ -1,0 +1,34 @@
+<script>
+
+  /**
+   * Allows clearing of target node, utility behavior.
+   *
+   * @behavior
+   */
+  EvtElements.behaviors.clear = {
+
+    /**
+     * Will remove all nodes from target. Where target is either name of preselected
+     * node inside this element - this.$.target, or selector for one of nested elements.
+     *
+     * @param {String} target Name (id) or Selector
+     */
+    clear: function(target) {
+      if (typeof target === 'string') {
+        this._clear(this.$[target] || this.$$(target) || {});
+      }
+    },
+
+    /**
+     * Removes all children from the given node.
+     *
+     * @param {HTMLElement} node
+     */
+    _clear: function(node) {
+      while(node.firstElementChild) {
+        node.removeChild(node.firstElementChild);
+      }
+    }
+  };
+
+</script>

@@ -1,0 +1,58 @@
+<link rel="import" href="evt-thng-card.html">
+
+<dom-module id="evt-thng-card">
+  <template>
+
+    <style>
+      .container {
+        padding: 10px;
+      }
+
+      .container .title {
+        /*truncate*/
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .container .subtitle {
+        color: #757575;
+        font-size: 14px;
+      }
+
+      .container iron-image {
+        min-height: 54px;
+        min-width: 54px;
+        margin-right: 24px;
+
+        border-radius: 50%;
+        background-color: #E1F5FE;
+      }
+    </style>
+
+    <paper-item class="container layout horizontal">
+      <iron-image src="{{thng.product.photos.0}}" preload sizing="cover"></iron-image>
+
+      <div class="details layout vertical">
+        <div class="title">{{thng.name}}</div>
+        <div class="subtitle">{{thng.id}}</div>
+      </div>
+
+      <paper-ripple></paper-ripple>
+    </paper-item>
+
+  </template>
+  <script>
+    EvtElements.ThngCard = Polymer({
+      is: 'evt-thng-card',
+
+      behaviors: [
+        EvtElements.behaviors.thng
+      ],
+
+      factoryImpl: function(config) {
+        this.thng = config.thng;
+      }
+    });
+  </script>
+</dom-module>

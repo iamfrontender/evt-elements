@@ -1,0 +1,21 @@
+<script>
+  /**
+   * Mount behavior, tracks whether the element is attached to the dom.
+   *
+   * @behavior
+   */
+  EvtElements.behaviors.mount = {
+
+    /**
+     * Represents mounted state.
+     */
+    mounted: false,
+
+    /**
+     * @see Polymer.Base#attached
+     */
+    attached: function() {
+      this.mounted = true;
+    }
+  };
+</script>

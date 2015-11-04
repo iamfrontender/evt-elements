@@ -1,0 +1,119 @@
+<script>
+  /**
+   * Boolean property behavior.
+   * Supports different aliases for boolean names.
+   *
+   * @behavior
+   */
+  EvtElements.behaviors.property.boolean = {
+
+    /**
+     * Stores all required/supported formats.
+     * @remark it's critical to keep values by pairs.
+     *
+     * @type {Array}
+     */
+    values: [
+      // Primitive variations
+      true, false,
+      'TRUE', 'FALSE',
+      'true', 'false',
+
+      // Verbose
+      'on', 'off',
+      'alive', 'dead',
+      'online', 'offline',
+      'present', 'absent',
+      'running', 'idle',
+
+      // I/O
+      1, 0,
+      '1', '0'
+    ],
+
+    /**
+     * @see Polymer.Base.listeners
+     */
+    listeners: {
+      'editor.change': '_onChange'
+    },
+
+    /**
+     * @see Polymer.Base.behaviors
+     */
+    behaviors: [
+      EvtElements.behaviors.mount
+    ],
+
+    /**
+     * @see Polymer.Base.observers
+     */
+    observers: [
+      '_onPropertyValueChanged(property.value)'
+    ],
+
+    /**
+     * Handles change event from editor element by
+     * inverting the current value.
+     */
+    _onChange: function(e) {
+      this.set('property.value', this._invert());
+    },
+
+    /**
+     * Handles change of property.value updating it.
+     */
+    _onPropertyValueChanged: function() {
+      // TODO: Update the thng.property()
+    },
+
+    /**
+     * Converts given value to primitive.
+     *
+     * @param value {String|Boolean}
+     * @returns {boolean}
+     */
+    _booleanify: function(value) {
+      if (this.values['true'].indexOf(value) !== -1) {
+        return true;
+      } else if (this.values['false'].indexOf(value) !== -1) {
+        return false;
+      } else {
+        // FIXME: Unsupported format
+      }
+    },
+
+    /**
+     * Inverts the current property.value, taking into account its current format.
+     *
+     * @returns {String|Boolean}
+     * @private
+     */
+    _invert: function() {
+      // Since we already have a value, assume it's valid and
+      // is represented in formats.
+      var format = this.values.indexOf(this.property.value);
+
+      // Since formats are kept in pairs, if format % 2 === 0, it's
+      // 'thruthy' value and vice versa.
+      if (format % 2 === 0) {
+        // (format >> 2) === (Math.floor(format / 2));
+        // So, the !value is in opposite formats array with the same index.
+        return this.values['false'][format >> 1];
+      } else {
+        return this.values['true'][format >> 1];
+      }
+    }
+  };
+
+  // Postprocessing of formats data for easier usage,
+  // constructing two arrays with only 'truthy' and 'falsey' values.
+  (function(behavior) {
+    behavior.values['true'] = [];
+    behavior.values['false'] = [];
+
+    behavior.values.forEach(function(it, i) {
+      behavior.values[(i % 2 === 0) ? 'true' : 'false'].push(it);
+    });
+  })(EvtElements.behaviors.property.boolean);
+</script>

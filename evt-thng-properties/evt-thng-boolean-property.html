@@ -1,0 +1,28 @@
+<dom-module id="evt-thng-boolean-property">
+  <template>
+    <section class="thng-property layout horizontal">
+      <div class="thng-property__details flex">
+        <div class="thng-property__name">{{property.name}}</div>
+        <div class="thng-property__value">{{property.value}}</div>
+      </div>
+
+      <aside class="thng-property__action layout horizontal">
+        <paper-toggle-button class="self-center" id="editor" checked="{{_booleanify(property.value)}}"></paper-toggle-button>
+      </aside>
+    </section>
+  </template>
+  <script>
+    EvtElements.ThngBooleanProperty = Polymer({
+      is: 'evt-thng-boolean-property',
+
+      behaviors: [
+        EvtElements.behaviors.property.boolean
+      ],
+
+      factoryImpl: function(config) {
+        this.thng = config.thng;
+        this.property = config.property;
+      }
+    });
+  </script>
+</dom-module>

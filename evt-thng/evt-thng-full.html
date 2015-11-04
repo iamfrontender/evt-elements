@@ -1,0 +1,121 @@
+<dom-module id="evt-thng-full">
+  <template>
+
+    <style>
+
+      section iron-image {
+        width: 100%;
+        height: 192px;
+        background-color: #E1F5FE;
+        opacity: .7;
+      }
+
+      section iron-icon {
+        margin: 24px;
+        color: #039BE5;
+      }
+
+      section .details {
+        border-top: 1px solid lightgray;
+        margin: 16px;
+      }
+
+      section .item {
+        margin: 16px 0;
+      }
+
+      section:first-of-type .details {
+        border: 0;
+      }
+
+      section .tag {
+        background-color: lightgray;
+        padding: 1px 4px;
+        border-radius: 2px;
+      }
+
+    </style>
+
+    <section id="details">
+      <iron-image hidden$="{{!_has(thng, 'product.photos.0')}}" src="{{_get(thng, 'product.photos.0')}}"
+                  sizing="cover"></iron-image>
+
+      <div class="details">
+        <div class="item">
+          <div class="paper-font-headline">{{_get(thng, 'name')}}</div>
+        </div>
+        <div class="paper-font-subhead">{{_get(thng, 'id')}}</div>
+        <div class="paper-font-body1 secondary" idden$="{{!_has(thng, 'description')}}">{{_get(thng, 'description')}}</div>
+      </div>
+    </section>
+
+    <section id="product" hidden$="{{!_has(thng, 'product')}}" class="layout horizontal">
+      <iron-icon icon="class"></iron-icon>
+
+      <div class="details">
+        <div class="item">
+          <div class="paper-font-body2">{{_get(thng, 'product.fn', 'Unknown')}}</div>
+          <div class="paper-font-caption">{{_get(thng, 'product.id', '')}}</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="identifiers" hidden$="{{!_has(thng, 'identifiers')}}" class="layout horizontal">
+      <iron-icon icon="info-outline"></iron-icon>
+
+      <div class="details flex layout vertical">
+        <template is="dom-repeat" items="{{_keys(thng, 'identifiers')}}" as="identifier">
+          <div class="item">
+            <div class="paper-font-body2">{{_get(thng.identifiers, identifier)}}</div>
+            <div class="paper-font-caption">{{identifier}}</div>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <section id="custom-fields" hidden$="{{!_has(thng, 'customFields')}}" class="layout horizontal">
+      <iron-icon icon="description"></iron-icon>
+
+      <div class="details flex layout vertical">
+        <template is="dom-repeat" items="{{_keys(thng, 'customFields')}}" as="{{field}}">
+          <div class="item">
+            <div class="title">{{_get(thng.customFields, field}}</div>
+            <div class="label">{{field}}</div>
+          </div>
+        </template>
+      </div>
+    </section>
+    <section id="tags" hidden$="{{!_has(thng, 'tags')}}" class="layout horizontal">
+      <iron-icon icon="loyalty"></iron-icon>
+
+      <div class="details flex layout horizontal">
+        <div class="item">
+          <template is="dom-repeat" items="{{_get(thng, 'tags')}}">
+            <span class="tag">{{item}}</span>
+          </template>
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <script>
+    EvtElements.ThngFull = Polymer({
+      is: 'evt-thng-full',
+
+      behaviors: [
+        EvtElements.behaviors.access,
+        EvtElements.behaviors.thng
+      ],
+
+      properties: {
+        thng: {
+          type: Object
+        }
+      },
+
+      factoryImpl: function(config) {
+        this.thng = config.thng;
+      }
+    });
+  </script>
+</dom-module>
