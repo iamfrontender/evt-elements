@@ -2,13 +2,14 @@
   <template>
     <section class="thng-property">
       <div class="thng-property__details flex">
-        <div class="thng-property__name">{{property.name}}</div>
-        <div class="thng-property__unit" hidden$="!_has(property, 'meta.unit')">{{property.meta.unit}}</div>
+        <div class="thng-property__name">{{_get(property, 'name')}}</div>
+        <div class="thng-property__unit" hidden$="!_has(property, 'meta.unit')">{{_get(property, 'meta.unit', 'raw')}}</div>
 
         <paper-slider id="editor"
-                      value="{{property.value}}"
+                      value="{{_numberify(property.value)}}"
                       min="{{property.meta.minValue}}"
                       max="{{property.meta.maxValue}}"
+                      pin="true"
                       editable
         ></paper-slider>
       </div>
@@ -51,11 +52,17 @@
       },
 
       observers: [
-        '_propertyValueChanged(property.value)'
+        '_propertyValueChanged(property.value)',
+        '_propertyMetaChanged(property.meta)'
       ],
 
-      _propertyValueChanged: function () {
+      _propertyValueChanged: function (value) {
 
+      },
+
+      _propertyMetaChanged: function(meta) {
+        this.$.editor.min = meta.minValue;
+        this.$.editor.max = meta.maxValue;
       }
     });
   </script>

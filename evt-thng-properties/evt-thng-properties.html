@@ -7,7 +7,7 @@
         No Properties
       </div>
 
-      <template is="dom-repeat" items="{{listProperties(thng)}}" as="propertyName">
+      <template is="dom-repeat" items="{{listProperties(thng)}}" as="propertyName" sort="_booleanFirst">
         <evt-thng-property property="{{getProperty(propertyName)}}" thng="{{thng}}"></evt-thng-property>
       </template>
     </section>
@@ -114,19 +114,21 @@
         }
       },
 
-      booleanFirst: function (input) {
-        var lastBooleanIndex = 0,
-          ret = [];
+      _booleanFirst: function (a, b) {
+        var sorter = 0;
 
-        for(var i = 0; i< input.length; i++){
-          if(input[i].isBoolean || input[i].isFakeBoolean){
-            ret.splice(lastBooleanIndex++, 0, input[i]);
-          } else {
-            ret.push(input[i]);
-          }
+        a = this.getProperty(a);
+        b = this.getProperty(b);
+
+        if (a.meta && a.meta.type === 'boolean') {
+          sorter--;
         }
 
-        return ret;
+        if (b.meta && b.meta.type === 'boolean') {
+          sorter++;
+        }
+
+        return sorter;
       },
 
       noHidden: function (input) {

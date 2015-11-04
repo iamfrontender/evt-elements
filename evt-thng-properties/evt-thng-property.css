@@ -1,5 +1,5 @@
 .thng-property {
-  margin-bottom: 10px;
+  margin: 5px 40px;
   padding: 10px;
 }
 
@@ -8,5 +8,9 @@
 }
 
 .thng-property__value {
+  color: #777;
+}
+
+.thng-property__unit {
   color: #777;
 }

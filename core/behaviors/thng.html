@@ -11,6 +11,13 @@
   EvtElements.behaviors.thng = {
 
     /**
+     * Caches all requested properties.
+     *
+     * @type {Object}
+     */
+    _propertyCache: {},
+
+    /**
      * Returns true if thng on this element has at least one property.
      * Useful for hidden$ and other attributes with computed bindings.
      *
@@ -41,16 +48,35 @@
      * @returns {name: string, value: *, meta: object}
      */
     getProperty: function(name) {
-      if (this.thng) {
-        var raw = this.thng.properties[name];
+      var raw, prop;
 
-        if (this._isValue(raw)) {
-          return {
-            name: name,
-            value: raw,
-            meta: this._getMeta(name)
-          };
+      // Are we instantiated yet?
+      if (this.thng) {
+
+        // Are we have this property cached?
+        if (this._propertyCache[name]) {
+
+          // yep, return it
+          prop = this._propertyCache[name];
+
+        } else {
+          // nope, compute it
+          raw = this.thng.properties[name];
+
+          // If value is defined
+          if (this._isValue(raw)) {
+            // compute the property and return it
+            prop = this._propertyCache[name] = {
+              name: name,
+              value: raw,
+              meta: this._getMeta(name)
+            };
+          }
+
+          // There is nothing to return otherwise.
         }
+
+        return prop;
       }
     },
 
