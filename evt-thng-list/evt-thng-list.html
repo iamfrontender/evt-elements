@@ -48,6 +48,15 @@
       },
 
       refresh: function () {
+        // TODO: Development only
+        function createMeta(thng, name, value) {
+          thng.customFields = thng.customFields || {};
+          thng.customFields[name] = {
+            values: value
+          };
+        }
+
+
         if (this.user && !this.thngs) {
           var $this = this;
 
@@ -63,15 +72,27 @@
               }
 
               // TODO: Development only
-              if (thng.properties.status) {
-                thng.customFields = {
-                  status: {
-                    values: {
-                      type: 'boolean'
-                    }
-                  }
-                };
-              }
+              Object.keys(thng.properties).forEach(function(prop) {
+                if (prop === 'status' || prop === 'state') {
+                  createMeta(thng, prop, {
+                    type: 'boolean'
+                  });
+                }
+
+                if (typeof thng.properties[prop] === 'boolean') {
+                  createMeta(thng, prop, {
+                    type: 'boolean'
+                  });
+                }
+
+                if (typeof  thng.properties[prop] === 'number') {
+                  createMeta(thng, prop, {
+                    type: 'number',
+                    minValue: thng.properties[prop] - 120,
+                    maxValue: thng.properties[prop] + 120
+                  });
+                }
+              });
             });
 
             $this.user.product().read({
