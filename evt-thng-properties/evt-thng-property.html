@@ -26,9 +26,9 @@
         this.clear('propertyContainer');
 
         if (this.property.meta) {
-          this._loadFromMeta();
+          this.$.propertyContainer.appendChild(this._createEditor(this.property.meta.type));
         } else {
-          this._loadDefault();
+          this.$.propertyContainer.appendChild(this._createEditor());
         }
       },
 
@@ -36,20 +36,10 @@
         this.property = property;
       },
 
-      _loadFromMeta: function () {
-        var type = this.property.meta.type;
-
-        this.$.propertyContainer.appendChild(this._createEditor(type, this.property));
-      },
-
-      _loadDefault: function() {
-        this.$.propertyContainer.appendChild(this._createEditor('string', this.property));
-      },
-
       _createEditor: function(type) {
         var Editor;
 
-        type = 'Thng' + EvtElements.utils.string.capitalize(type) + 'Property';
+        type = 'Thng' + EvtElements.utils.string.capitalize((type || 'string')) + 'Property';
         Editor = EvtElements[type] || EvtElements.ThngStringProperty;
 
         return new Editor({

@@ -1,0 +1,14 @@
+<script>
+  EvtElements.behaviors.property.number = {
+
+    observers: [
+      '_onPropertyValueChanged'
+    ],
+
+    _numberify: function () {
+      if (this.property && this.property.value) {
+        return Number(this.property.value);
+      }
+    }
+  };
+</script>
