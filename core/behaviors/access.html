@@ -30,7 +30,7 @@
      *
      * @returns {*}
      */
-    _get: function (source, property, defaultValue) {
+    _getKey: function (source, property, defaultValue) {
       if (source) {
         return _.get(source, property) || defaultValue;
       } else {
@@ -45,8 +45,8 @@
      * @param {String} property
      * @returns {String[]} keys of property object
      */
-    _keys: function (source, property) {
-      return Object.keys(this._get(source, property, []));
+    _keys: function(source, property) {
+      return Object.keys(this._getKey(source, property, []));
     }
   };
 </script>

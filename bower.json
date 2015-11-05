@@ -1,14 +1,14 @@
 {
   "name": "evt-elements",
   "version": "0.2.2",
-  "main": "index.html",
+  "main": "evt-elements.html",
   "authors": [
     "EVRYTHNG team"
   ],
   "description": "Collection of EVRYTHNG compatible elements for Polymer ^1.0.0",
   "moduleType": [],
   "keywords": [
-    "web-component",
+    "web-components",
     "evrythng",
     "polymer"
   ],

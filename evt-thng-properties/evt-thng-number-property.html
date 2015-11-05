@@ -4,8 +4,8 @@
   <template>
     <section class="thng-property">
       <div class="thng-property__details flex">
-        <div class="thng-property__name">{{_get(property, 'name')}}</div>
-        <div class="thng-property__unit" hidden$="!_has(property, 'meta.unit')">{{_get(property, 'meta.unit', 'raw')}}</div>
+        <div class="thng-property__name">{{property.name}}</div>
+        <div class="thng-property__unit" hidden$="!_has(property, 'meta.unit')">{{_getKey(property, 'meta.unit', 'raw')}}</div>
 
         <paper-slider id="editor"
                       value="{{_numberify(property.value)}}"

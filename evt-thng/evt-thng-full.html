@@ -39,15 +39,15 @@
     </style>
 
     <section id="details">
-      <iron-image hidden$="{{!_has(thng, 'product.photos.0')}}" src="{{_get(thng, 'product.photos.0')}}"
+      <iron-image hidden$="{{!_has(thng, 'product.photos.0')}}" src="{{thng.product.photos.0}}"
                   sizing="cover"></iron-image>
 
       <div class="details">
         <div class="item">
-          <div class="paper-font-headline">{{_get(thng, 'name')}}</div>
+          <div class="paper-font-headline">{{thng.name}}</div>
         </div>
-        <div class="paper-font-subhead">{{_get(thng, 'id')}}</div>
-        <div class="paper-font-body1 secondary" idden$="{{!_has(thng, 'description')}}">{{_get(thng, 'description')}}</div>
+        <div class="paper-font-subhead">{{thng.id}}</div>
+        <div class="paper-font-body1 secondary" hidden$="{{!thng.description}}">{{thng.description}}</div>
       </div>
     </section>
 
@@ -56,8 +56,8 @@
 
       <div class="details">
         <div class="item">
-          <div class="paper-font-body2">{{_get(thng, 'product.fn', 'Unknown')}}</div>
-          <div class="paper-font-caption">{{_get(thng, 'product.id', '')}}</div>
+          <div class="paper-font-body2">{{thng.product.fn}}</div>
+          <div class="paper-font-caption">{{thng.product.id}}</div>
         </div>
       </div>
     </section>
@@ -68,7 +68,7 @@
       <div class="details flex layout vertical">
         <template is="dom-repeat" items="{{_keys(thng, 'identifiers')}}" as="identifier">
           <div class="item">
-            <div class="paper-font-body2">{{_get(thng.identifiers, identifier)}}</div>
+            <div class="paper-font-body2">{{_getKey(thng.identifiers, identifier)}}</div>
             <div class="paper-font-caption">{{identifier}}</div>
           </div>
         </template>
@@ -81,18 +81,19 @@
       <div class="details flex layout vertical">
         <template is="dom-repeat" items="{{_keys(thng, 'customFields')}}" as="{{field}}">
           <div class="item">
-            <div class="title">{{_get(thng.customFields, field}}</div>
+            <div class="title">{{_getKey(thng.customFields, field}}</div>
             <div class="label">{{field}}</div>
           </div>
         </template>
       </div>
     </section>
+
     <section id="tags" hidden$="{{!_has(thng, 'tags')}}" class="layout horizontal">
       <iron-icon icon="loyalty"></iron-icon>
 
       <div class="details flex layout horizontal">
         <div class="item">
-          <template is="dom-repeat" items="{{_get(thng, 'tags')}}">
+          <template is="dom-repeat" items="{{_getKey(thng, 'tags')}}">
             <span class="tag">{{item}}</span>
           </template>
         </div>
