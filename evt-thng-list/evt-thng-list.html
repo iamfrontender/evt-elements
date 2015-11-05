@@ -11,11 +11,6 @@
 
     <iron-list items="{{thngs}}" as="thng" id="list" indexAs="id" selection-enabled>
       <template>
-        <!--<devices-list-item>
-          <iron-image src="{{thng.product.photos.0}}" preload sizing="cover"></iron-image>
-          <div class="title">{{thng.name}}</div>
-          <div class="subtitle">{{thng.id}}</div>
-        </devices-list-item>-->
         <evt-thng-card thng="{{thng}}"></evt-thng-card>
       </template>
     </iron-list>
@@ -58,6 +53,30 @@
           };
         }
 
+        // TODO: Development only
+        function generateMeta(thng) {
+          Object.keys(thng.properties).forEach(function(prop) {
+            if (prop === 'status' || prop === 'state') {
+              createMeta(thng, prop, {
+                type: 'boolean'
+              });
+            }
+
+            if (typeof thng.properties[prop] === 'boolean') {
+              createMeta(thng, prop, {
+                type: 'boolean'
+              });
+            }
+
+            if (typeof  thng.properties[prop] === 'number') {
+              createMeta(thng, prop, {
+                type: 'number',
+                minValue: thng.properties[prop] - 5,
+                maxValue: thng.properties[prop] + 5
+              });
+            }
+          });
+        }
 
         if (this.user && !this.thngs) {
           var $this = this;
@@ -74,27 +93,7 @@
               }
 
               // TODO: Development only
-              Object.keys(thng.properties).forEach(function(prop) {
-                if (prop === 'status' || prop === 'state') {
-                  createMeta(thng, prop, {
-                    type: 'boolean'
-                  });
-                }
-
-                if (typeof thng.properties[prop] === 'boolean') {
-                  createMeta(thng, prop, {
-                    type: 'boolean'
-                  });
-                }
-
-                if (typeof  thng.properties[prop] === 'number') {
-                  createMeta(thng, prop, {
-                    type: 'number',
-                    minValue: thng.properties[prop] - 5,
-                    maxValue: thng.properties[prop] + 5
-                  });
-                }
-              });
+              generateMeta(thng);
             });
 
             $this.user.product().read({

@@ -1,0 +1,52 @@
+<link rel="import" href="../../iron-image/iron-image.html">
+
+<dom-module id="evt-logo">
+  <style>
+    :host {
+      display: block;
+    }
+
+    img {
+      max-width: 100%;
+    }
+  </style>
+  <template>
+    <img src="{{imageSrc}}" alt="{{alt}}">
+  </template>
+  <script>
+    EvtElements.Logo = Polymer({
+      is: 'evt-logo',
+
+      MODES: {
+        'powered-by-horizontal': {
+          file: 'evt-powered-by-horizontal.svg',
+          alt: 'Powered by EVRYTHNG'
+        },
+        'powered-by-vertical': {
+          file: 'evt-powered-by-vertical.svg',
+          alt: 'Powered by EVRYTHNG'
+        }
+      },
+
+      properties: {
+        mode: {
+          type: String,
+          observer: '_modeChanged',
+          value: 'powered-by-vertical'
+        },
+        location: {
+          type: String,
+          observer: '_modeChanged',
+          value: '../bower_components/evt-elements/images'
+        }
+      },
+
+      _modeChanged: function () {
+        if (this.MODES[this.mode]) {
+          this.imageSrc = [this.location, this.MODES[this.mode].file].join('/');
+          this.alt = this.MODES[this.mode].alt;
+        }
+      }
+    });
+  </script>
+</dom-module>

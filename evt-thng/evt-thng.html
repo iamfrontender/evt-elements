@@ -6,14 +6,31 @@
     <div id="container"></div>
   </template>
   <script>
+    /**
+     * Thng Wrapper.
+     *
+     * @component
+     */
     EvtElements.Thng = Polymer({
+
+      /**
+       * @see Polymer.Base.is
+       */
       is: 'evt-thng',
 
+      /**
+       * Defines the modes, this component may exist with
+       *
+       * @type {Object}
+       */
       MODES: {
         'card': 'ThngCard',
         'full': 'ThngFull'
       },
 
+      /**
+       * @see Polymer.Base.properties
+       */
       properties: {
         mode: {
           type: String,
@@ -27,20 +44,35 @@
         }
       },
 
+      /**
+       * @see Polymer.Base.behaviors
+       */
       behaviors: [
         EvtElements.behaviors.clear,
         EvtElements.behaviors.thng
       ],
 
+      /**
+       * @see Polymer.Base.factoryImpl
+       */
       factoryImpl: function(config) {
         this.thng = config.thng;
         this.mode = config.mode || 'card';
       },
 
+      /**
+       * Observer for mode.
+       */
       _modeChanged: function() {
         this.setMode(this.mode);
       },
 
+      /**
+       * Sets this element to given mode,
+       * in fact just appends another component implementing the required view, to this one.
+       *
+       * @param {String} mode One of the supported Modes
+       */
       setMode: function(mode) {
         if (this.MODES[mode]) {
           var thngEl = new EvtElements[this.MODES[mode]]({
