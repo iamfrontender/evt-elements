@@ -1,9 +1,4 @@
-<link rel="import" href="../../paper-item/paper-item.html">
-<link rel="import" href="../../paper-ripple/paper-ripple.html">
-
-<link rel="import" href="evt-thng-card.html">
-
-<dom-module id="evt-thng-card">
+<dom-module id="evt-user-card">
   <template>
 
     <style>
@@ -34,11 +29,10 @@
     </style>
 
     <paper-item class="container layout horizontal">
-      <iron-image src="{{thng.product.photos.0}}" preload sizing="cover"></iron-image>
+      <iron-image src="{{photo}}" sizing="cover"></iron-image>
 
       <div class="details layout vertical">
-        <div class="title">{{thng.name}}</div>
-        <div class="subtitle">{{thng.id}}</div>
+        <div class="title">{{fullName}}</div>
       </div>
 
       <paper-ripple></paper-ripple>
@@ -46,15 +40,15 @@
 
   </template>
   <script>
-    EvtElements.ThngCard = Polymer({
-      is: 'evt-thng-card',
+    EvtElements.UserCard = Polymer({
+      is: 'evt-user-card',
 
       behaviors: [
-        EvtElements.behaviors.thng
+        EvtElements.behaviors.user
       ],
 
       factoryImpl: function(config) {
-        this.thng = config.thng;
+        this.user = config.user;
       }
     });
   </script>

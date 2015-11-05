@@ -1,26 +1,59 @@
 <script>
   EvtElements.behaviors.user = {
 
-    actionTypes: [],
-
-    hasActionTypes: function() {
-      return this.actionTypes.length !== 0;
+    properties: {
+      user: Object,
+      thng: Object,
+      actionTypes: {
+        type: Array,
+        value: []
+      }
     },
 
-    fetchActionTypes: function() {
+    observers: [
+      '_fetchActionTypes(user)',
+      '_refreshInfo(user.facebook)'
+    ],
+
+    hasActionTypes: function() {
+      return this.actionTypes && this.actionTypes.length !== 0;
+    },
+
+    _fetchActionTypes: function() {
       if (this.user && !this.hasActionTypes()) {
         var $this = this;
 
-        this.user.actionTypes().read({
+        this.user.actionType().read({
           localhost: true
         }).then(function actionTypesFetched(actionTypes) {
-          $this.actionTypes = actionTypes.filter(this._customActionTypesFilter);
-        })
+          $this.push.apply($this, ['actionTypes'].concat(actionTypes.filter($this._customActionTypesFilter)));
+        });
       }
     },
 
     _customActionTypesFilter: function(actionType) {
-      return actionType.charAt(0) === '_';
+      return actionType.name.charAt(0) === '_';
+    },
+
+    _refreshInfo: function() {
+      this.set('fullName', this.getFullName(this.user));
+      this.photo = this.getPhoto(this.user);
+    },
+
+    getFullName: function(user) {
+      if (user && user.facebook) {
+        return user.facebook.first_name + ' ' + user.facebook.last_name;
+      } else {
+        return '';
+      }
+    },
+
+    getPhoto: function(user) {
+      if (user && user.facebook) {
+        return user.facebook.photo;
+      } else {
+        return '';
+      }
     }
   };
 </script>

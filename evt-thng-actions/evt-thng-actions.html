@@ -1,29 +1,37 @@
+<link rel="import" href="../../paper-toast/paper-toast.html">
+
+<link rel="import" href="evt-thng-action.html">
+
 <dom-module id="evt-thng-actions">
   <template>
 
-    <div class="empty"></div>
+    <style>
+
+    </style>
+
+    <section class="empty-message layout vertical">
+      <div class="empty self-center" hidden$="{{!hasActionTypes(user)}}">No Actions</div>
+    </section>
+
     <template is="dom-repeat" items="{{actionTypes}}" as="action">
-      <evt-thng-action thng="{{thng}}" action="{{action}}" user="{{user}}"></evt-thng-action>
+      <evt-thng-action thng="{{thng}}" action="{{action}}" user="{{user}}" on-action-created="_onActionCreated"></evt-thng-action>
     </template>
+
+    <paper-toast id="actionToast" text="{{actionToastText}}"></paper-toast>
   </template>
   <script>
     EvtElements.ThngActions = Polymer({
       is: 'evt-thng-actions',
 
-      behavior: [
-        EvtElements.behaviors.thng,
-        EvtElements.behaviors.user
+      behaviors: [
+        EvtElements.behaviors.action,
+        EvtElements.behaviors.user,
+        EvtElements.behaviors.thng
       ],
 
-      properties: {
-        user: {
-          type: Object,
-          observer: 'fetchActionTypes'
-        },
-        thng: {
-          type: Object,
-          observer: 'fetchActionTypes'
-        }
+      _onActionCreated: function(e, item) {
+        this.actionToastText = 'Action ' + this.getActionName(item) + ' was successfully created.';
+        this.$.actionToast.show();
       }
     });
   </script>

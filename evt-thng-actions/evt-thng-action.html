@@ -1,19 +1,35 @@
+<link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../iron-icons/image-icons.html">
+
 <dom-module id="evt-thng-action">
   <template>
 
-    <section class="thng-action layout vertical">
-      <div class="thng-action__details">
+    <style>
+      .thng-action {
+        margin: 5px 40px;
+        padding: 10px;
+      }
 
-        <div class="thng-action__icon">
-          <iron-icon icon="{{getActionIcon(action)}}"></iron-icon>
-        </div>
-        <div class="thng-action__name">{{getActionIcon(action)}}</div>
+      .thng-action__icon {
+        color: #039BE5;
+      }
 
+      .thng-action__action {
+        color: #FDD835;
+      }
+    </style>
+
+    <section class="thng-action layout horizontal">
+
+      <div class="thng-action__details flex self-center">
+        <iron-icon class="thng-action__icon" icon="{{getActionIcon(action)}}"></iron-icon>
+        <span class="thng-action__name">{{getActionName(action)}}</span>
       </div>
 
-      <aside class="thng-action__action">
-        <paper-icon-button icon="image:flash-on" on-tap="_createAction"></paper-icon-button>
+      <aside class="thng-action__action layout horizontal">
+        <paper-icon-button class="self-center" icon="image:flash-on" on-tap="_createAction"></paper-icon-button>
       </aside>
+
     </section>
 
   </template>
@@ -22,12 +38,11 @@
       is: 'evt-thng-action',
 
       behaviors: [
-        EvtElements.behaviors.user,
         EvtElements.behaviors.action
       ],
 
       _actionCreated: function() {
-        this.fire('thng-action-created', this.action);
+        this.fire('action-created', this.action);
       }
     })
   </script>
