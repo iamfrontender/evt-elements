@@ -21,7 +21,7 @@ function error() {
   ].concat(Array.prototype.slice.call(arguments)));
 }
 
-function docgen(entry, store, done, index) {
+function docgen(entry, store, done) {
   log('parsing', entry);
 
   entry = path.resolve(entry);
@@ -35,13 +35,15 @@ function docgen(entry, store, done, index) {
       onopentag: function(name, attrs) {
         if (name === 'link' && attrs.rel === 'import') {
           if (~attrs.href.indexOf('evt-')) {
-            store.imports.push(path.resolve(path.dirname(entry), attrs.href));
+            var href = path.resolve(path.dirname(entry), attrs.href);
+
+            store.imports.push(href);
           }
         }
       },
 
       oncomment: function(content) {
-        store.docs.push(content);
+        store.docs.push(content)
       }
     });
 
@@ -52,7 +54,7 @@ function docgen(entry, store, done, index) {
 
     async.eachSeries(store.imports, function(item, next) {
       if (!store.done[item]) {
-        docgen(item, store, next, index);
+        docgen(item, store, next);
       } else {
         next();
       }
@@ -80,5 +82,5 @@ module.exports = function(entry, done) {
     } else {
       done(null, data);
     }
-  }, 0);
+  });
 };
