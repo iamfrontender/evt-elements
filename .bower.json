@@ -1,0 +1,36 @@
+{
+  "name": "evt-elements",
+  "authors": [
+    "EVRYTHNG team"
+  ],
+  "description": "Collection of EVRYTHNG compatible elements for Polymer ^1.0.0",
+  "main": "index.html",
+  "moduleType": [],
+  "keywords": [
+    "web-component",
+    "evrythng",
+    "polymer"
+  ],
+  "license": "Apache 2.0",
+  "homepage": "https://github.com/iamfrontender/evt-elements",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-elements": "~1.0.4"
+  },
+  "_release": "de18221a5e",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "de18221a5eb731441b732eaaf2d1bf1ba2b55efb"
+  },
+  "_source": "git://github.com/iamfrontender/evt-elements.git",
+  "_target": "*",
+  "_originalSource": "evt-elements",
+  "_direct": true
+}

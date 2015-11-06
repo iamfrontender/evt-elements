@@ -1,0 +1,31 @@
+{
+  "name": "evt-elements",
+  "version": "0.3.2",
+  "description": "Bundle of web-components compatible with EVRYTHNG API",
+  "main": "evt-elements.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamfrontender/evt-elements.git"
+  },
+  "keywords": [
+    "web-components",
+    "polymer",
+    "evrythng"
+  ],
+  "author": "EVRYTHNG Team",
+  "license": "SEE LICENSE IN LICENSE.txt",
+  "bugs": {
+    "url": "https://github.com/iamfrontender/evt-elements/issues"
+  },
+  "homepage": "https://github.com/iamfrontender/evt-elements#readme",
+  "dependencies": {
+    "async": "^1.5.0",
+    "chalk": "^1.1.1",
+    "gulp": "^3.9.0",
+    "htmlparser2": "^3.8.3",
+    "hydrolysis": "^1.19.3"
+  }
+}
