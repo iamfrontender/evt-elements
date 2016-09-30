@@ -1,13 +1,23 @@
 <link rel="import" href="../../iron-image/iron-image.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
 
 <dom-module id="evt-logo">
-  <style>
+  <style include="iron-flex">
     :host {
       display: block;
+
+      @apply(--layout-vertical);
+      @apply(--layout-center);
     }
 
     img {
       max-width: 100%;
+      max-height: 100%;
+    }
+
+    :host[mode="mini"] {
+      width: 32px;
+      height: 32px;
     }
   </style>
   <template>
@@ -18,13 +28,14 @@
       is: 'evt-logo',
 
       MODES: {
-        'powered-by-horizontal': {
-          file: 'evt-powered-by-horizontal.svg',
-          alt: 'Powered by EVRYTHNG'
+        'inverted': {
+          file: 'evt-logo-inverted.png',
+          alt: 'EVRYTHNG'
         },
-        'powered-by-vertical': {
-          file: 'evt-powered-by-vertical.svg',
-          alt: 'Powered by EVRYTHNG'
+
+        'mini': {
+          file: 'evt-logo-mini.jpg',
+          alt: 'EVRYTHNG'
         }
       },
 
@@ -32,7 +43,7 @@
         mode: {
           type: String,
           observer: '_modeChanged',
-          value: 'powered-by-vertical'
+          value: 'mini'
         },
         location: {
           type: String,

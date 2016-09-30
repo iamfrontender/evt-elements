@@ -1,0 +1,29 @@
+<link rel="import" href="../evt-core/evt-core.html">
+<link rel="import" href="../evt-styles/evt-styles.html">
+
+<dom-module id="evt-object-field">
+  <template>
+    <style include="evt-styles">
+      :host {
+        display: block;
+      }
+
+      label {
+        display: block;
+        font-weight: bolder;
+      }
+    </style>
+
+    <label>{{field.name}}</label>
+    <span>{{field.value}}</span>
+  </template>
+  <script>
+    EvtElements.EvtObjectField = Polymer({
+      is: 'evt-object-field',
+
+      properties: {
+        field: Object
+      }
+    });
+  </script>
+</dom-module>

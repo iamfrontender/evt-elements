@@ -1,0 +1,54 @@
+<link rel="import" href="../evt-core/evt-core.html">
+<link rel="import" href="../evt-styles/evt-styles.html">
+<link rel="import" href="../evt-iconset/evt-iconset.html">
+<link rel="import" href="../evt-object-field/evt-object-field.html">
+
+<dom-module id="evt-entity-custom-fields">
+  <template>
+    <style include="evt-styles">
+      :host {
+        display: block;
+      }
+
+      iron-icon {
+        margin: var(--evt-unit-sm);
+      }
+
+      evt-object-field {
+        margin-bottom: var(--evt-unit-xs);
+      }
+
+      section {
+        margin-left: var(--evt-unit-sm);
+        margin-top: var(--evt-unit-xs);
+        padding: var(--evt-unit-xs);
+
+        background-color: var(--evt-details-background);
+      }
+    </style>
+
+    <header>
+      <iron-icon icon="evt:custom-field"></iron-icon>
+      <span>Custom Fields</span>
+    </header>
+
+    <section>
+      <template is="dom-repeat" items="{{_listCustomFields(entity)}}">
+        <evt-object-field field="{{item}}"></evt-object-field>
+      </template>
+    </section>
+  </template>
+  <script>
+    EvtElements.EvtEntityCustomFields = Polymer({
+      is: 'evt-entity-custom-fields',
+
+      properties: {
+        entity: Object
+      },
+
+      behaviors: [
+        EvtElements.behaviors.entity
+      ]
+    });
+  </script>
+</dom-module>

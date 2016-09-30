@@ -1,0 +1,319 @@
+<link rel="import" href="../../polymer/polymer.html">
+
+<script src="../../evrythng-extended/dist/evrythng-extended.js"></script>
+<script src="../../mqttjs-browserified/dist/mqtt.js"></script>
+<script src="../../evrythng-ws/dist/evrythng-ws.js"></script>
+<script src="../../evrythng-hub/dist/evrythng-hub.js"></script>
+
+<link rel="import" href="../evt-core/evt-core.html">
+
+<dom-module id="evt-app">
+  <template></template>
+  <script>
+    EvtElements.EvtApp = Polymer({
+      is: 'evt-app',
+
+      pendingInit: null,
+
+      behaviors: [
+        EvtElements.behaviors.storage
+      ],
+
+      properties: {
+
+        settings: Object,
+
+        app: {
+          type: Object,
+          readOnly: true,
+          notify: true
+        },
+
+        user: {
+          type: Object,
+          readOnly: true,
+          notify: true
+        },
+
+        facebook: Boolean,
+        hub: Boolean,
+        ws: Boolean
+
+      },
+
+      defaultSettings: {
+        evt: {
+          apiUrl: 'https://api.evrythng.com'
+        },
+
+        ws: {
+          apiUrl: 'wss://ws.evrythng.com:443/mqtt'
+        },
+
+        hub: {
+          httpApiUrl: 'http://192.168.0.12:8080',
+          wsApiUrl: 'ws://localhost:4000/mqtt',
+          timeout: 1000,
+          remote: true
+        }
+      },
+
+      observers: [
+        '_onSettingsChanged(settings.*)'
+      ],
+
+      settingConsumers: {
+        'settings': '_setup',
+        'settings.apiKey': '_onApiKeyChanged',
+        'settings.apiUrl': '_onApiUrlChanged',
+        'settings.localhostUrl': '_onLocalhostUrlChanged'
+      },
+
+      _setup: function() {
+        if (this.settings) {
+          var evtSettings = this.mixin(this.settings, this.defaultSettings.evt);
+
+          if (this.ws) {
+            this._setupWS();
+          }
+
+          if (this.hub) {
+            this._setupHub();
+          }
+
+          EVT.setup(evtSettings);
+
+          if (this.settings.apiKey) {
+            this.init();
+          }
+        }
+      },
+
+      _setupWS: function() {
+        var wsSettings = {
+          apiUrl: this.settings.wsApiUrl
+        };
+
+        EVT.use(EVT.WS);
+        EVT.WS.setup(
+          this.mixin(wsSettings, this.defaultSettings.ws)
+        );
+      },
+
+      _setupHub: function() {
+        var hubSettings = {
+          httpApiUrl: this.settings.localhostApiUrl,
+          wsApiUrl: this.settings.wsLocalhostApiUrl,
+          timeout: this.settings.hubTimeout,
+          remote: this.settings.remote
+        };
+
+        EVT.use(EVT.Hub);
+        EVT.Hub.setup(
+          this.mixin(hubSettings, this.defaultSettings.hub)
+        );
+      },
+
+      _onSettingsChanged: function(changes) {
+        this.consumeSettingsChanges(changes);
+      },
+
+      _onApiUrlChanged: function(apiUrl) {
+        if (apiUrl) {
+          EVT.setup({
+            apiUrl: apiUrl,
+            timeout: 1000
+          });
+        }
+      },
+
+      _onApiKeyChanged: function(apiKey) {
+        if (apiKey && this.settings) {
+          this.init();
+        }
+      },
+
+      init: function() {
+        var scope = this;
+        var app, config;
+
+        if (scope.pendingInit) {
+          return scope.pendingInit;
+        } else {
+          config = {
+            apiKey: scope.settings.apiKey
+          };
+
+          app = new EVT.App(config);
+
+          return (
+            scope.pendingInit = app.$init
+              .then(function() {
+                if (scope.facebook) {
+                  return scope._initFacebook(app.socialNetworks.facebook.appId)
+                    .then(function(response) {
+                      if (response.status === 'connected') {
+                        return scope._authFacebook(response, app);
+                      } else {
+                        return response;
+                      }
+                    });
+                }
+              })
+              .then(function (response) {
+                if (response.user) {
+                  scope.expose('user', response.user);
+                }
+
+                scope.expose('app', app);
+
+                return app;
+              })
+          );
+        }
+      },
+
+      _initFacebook: function(appId) {
+        var scope = this;
+
+        return new Promise(function(resolve, reject) {
+          (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+          }(document, 'script', 'facebook-jssdk'));
+
+          window.fbAsyncInit = function() {
+            FB.init({
+              appId: appId,
+              status: true,
+              cookie: true,
+              version: 'v2.7'
+            });
+
+            FB.getLoginStatus(function (response) {
+              if (response.status === 'connected') {
+                FB.api('/me', {
+                  fields: 'id,first_name,last_name,gender,link,picture,locale,name,timezone,updated_time,verified'
+                }, function (userInfo) {
+                  resolve(scope.mixin(response, { user: userInfo }));
+                });
+              } else {
+                resolve(response);
+              }
+            });
+          };
+        });
+      },
+
+      _authFacebook: function(response, app) {
+        var scope = this;
+
+        return EVT.api({
+          url: '/auth/facebook',
+          method: 'post',
+          data: {
+            access: {
+              token: response.authResponse.accessToken
+            }
+          }
+        }).then(function(access) {
+          var user = new EVT.User({
+            id: access.evrythngUser,
+            apiKey: access.evrythngApiKey
+          }, app);
+
+          scope.mixin(user, {
+            facebook: response.user
+          });
+
+          response.user = user;
+
+          return user.update();
+        }).then(function() {
+          return response;
+        });
+      },
+
+      login: function(config, customOptions) {
+        var scope = this;
+
+        return this.init()
+          .then(function() {
+            return scope.app.login(config, customOptions || scope.facebookOptions);
+          })
+          .then(function(response) {
+            return response.user ?
+              response.user.update()
+                .then(function() {
+                  return response;
+                }) : response;
+          })
+          .then(function(response) {
+            return scope.expose('user', response.user);
+          });
+      },
+
+      logout: function() {
+        var scope = this;
+
+        if (scope.user) {
+          if (scope.facebook) {
+            return new Promise(function(res) {
+              FB.getLoginStatus(function() {
+                FB.logout(res);
+              }, true);
+            }).then(function() {
+              return scope.user.logout();
+            }).then(function() {
+                scope.clean('user');
+            });
+          } else {
+            return scope.user.logout()
+              .then(function() {
+                scope.clean('user');
+              });
+          }
+        } else {
+          return Promise.resolve();
+        }
+      },
+
+      expose: function(prop, val) {
+        this['_set' + EvtElements.utils.capitalize(prop)](val);
+        EvtElements[prop] = val;
+
+        return val;
+      },
+
+      clean: function(prop) {
+        this['_set' + EvtElements.utils.capitalize(prop)](null);
+        EvtElements[prop] = null;
+
+        return null;
+      },
+
+      consumeSettingsChanges: function(changes) {
+        var consumer = this.settingConsumers[changes.path];
+
+        if (this[consumer]) {
+          this[consumer](changes);
+        }
+      },
+
+      _onApiUrlChanged: function(changes) {
+        EVT.setup({
+          apiUrl: changes.value
+        });
+      },
+
+      _onLocalhostUrlChanged: function(changes) {
+        EVT.setup({
+          localhostUrl: changes.value
+        });
+      }
+    });
+  </script>
+</dom-module>

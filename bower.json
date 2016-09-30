@@ -12,7 +12,12 @@
     "evrythng",
     "polymer"
   ],
-  "license": "Apache 2.0",
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "https://github.com/evrythng/evrythng.js/blob/master/LICENSE"
+    }
+  ],
   "homepage": "",
   "ignore": [
     "**/.*",
@@ -33,6 +38,8 @@
     "polymer": "Polymer/polymer#^1.2.0",
     "evrythng": "~3.3.2",
     "bower-mqttws": "~1.0.0",
-    "evrythng-ws": "~1.0.1"
+    "evrythng-ws": "^2.0.1",
+    "evrythng-extended": "^3.7.0",
+    "evrythng-hub": "^1.2.2"
   }
 }

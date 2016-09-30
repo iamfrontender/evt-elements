@@ -1,0 +1,51 @@
+<script>
+  /**
+   * Simple local storage wrapper to allow elements store their state.
+   *
+   * @type {Object}
+   */
+  EvtElements.behaviors.storage = {
+
+    created: function() {
+      this.store.init();
+    },
+
+    store: {
+      hot: false,
+      _store: {},
+
+      get: function(key) {
+        if (this.hot) {
+          return this._store[key];
+        }
+      },
+
+      set: function(key, value) {
+        this._store[key] = value;
+        this.persist();
+      },
+
+      remove: function(key) {
+        delete this._store[key];
+        this.persist();
+      },
+
+      persist: function() {
+        if (window.localStorage) {
+          window.localStorage.setItem('evt-storage', JSON.stringify(this._store));
+        }
+      },
+
+      init: function() {
+        if (window.localStorage) {
+          this._store = JSON.parse(window.localStorage.getItem('evt-storage')) || this._store;
+        }
+
+        this.hot = true;
+      }
+
+    }
+  };
+
+
+</script>

@@ -1,0 +1,51 @@
+<link rel="import" href="../evt-core/evt-core.html">
+<link rel="import" href="../evt-styles/evt-styles.html">
+
+<link rel="import" href="../../paper-styles/typography.html">
+<link rel="import" href="../../iron-image/iron-image.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="evt-entity-passport">
+  <template>
+    <style include="iron-flex evt-styles">
+      :host {
+        display: block;
+
+        @apply(--layout-horizontal);
+      }
+
+      iron-image {
+        margin-right: var(--evt-unit-md);
+      }
+
+      div {
+        @apply(--layout-self-center);
+        @apply(--layout-vertical);
+      }
+
+      .evt-entity-name {
+        @apply(--paper-font-title);
+      }
+
+      .evt-entity-id {
+        @apply(--paper-font-subhead);
+      }
+    </style>
+
+    <iron-image class="evt-entity-image" src="[[entity.photo]]" preload sizing="cover"></iron-image>
+    <div>
+      <span class="evt-entity-name">[[entity.name]]</span>
+      <span class="evt-entity-id">[[entity.id]]</span>
+    </div>
+
+  </template>
+  <script>
+    EvtElements.EvtEntityPassport = Polymer({
+      is: 'evt-entity-passport',
+
+      properties: {
+        entity: Object
+      }
+    });
+  </script>
+</dom-module>

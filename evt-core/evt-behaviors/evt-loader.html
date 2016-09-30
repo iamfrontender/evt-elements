@@ -1,0 +1,49 @@
+<link rel="import" href="../../../paper-spinner/paper-spinner.html">
+
+<script>
+  /**
+   * Nested property utility behavior.
+   *
+   * @behavior
+   */
+  EvtElements.behaviors.loader = {
+
+    properties: {
+      loading: {
+        type: Boolean,
+        observer: '_onLoadingChanged'
+      }
+    },
+
+    _onLoadingChanged: function() {
+      if (!this.spinner) {
+        this.spinner = document.createElement('paper-spinner');
+        this.spinner.active = false;
+
+        this.mixin(this.spinner.style, {
+          position: 'absolute',
+          left: 'calc(50% - 14px)',
+          top: 'calc(50% - 10px)'
+        });
+
+        this.mixin(this.style, {
+          position: 'relative'
+        });
+
+        Polymer.dom(this.root).appendChild(this.spinner);
+      }
+
+      this.mixin(
+        this.style, this.loading ? {
+          opacity: .5,
+          pointerEvents: 'none'
+        } : {
+          opacity: 1,
+          pointerEvents: 'all'
+        }
+      );
+
+      this.spinner.active = this.loading;
+    }
+  };
+</script>

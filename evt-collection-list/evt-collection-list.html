@@ -1,9 +1,9 @@
 <link rel="import" href="../../iron-list/iron-list.html">
 <link rel="import" href="../../paper-toast/paper-toast.html">
 
-<link rel="import" href="../evt-thng/evt-thng.html"/>
+<link rel="import" href="../evt-collection/evt-collection-card.html"/>
 
-<dom-module id="evt-thng-list">
+<dom-module id="evt-collection-list">
   <style>
     :host {
       display: block;
@@ -11,21 +11,21 @@
   </style>
   <template>
 
-    <div class="empty-message" hidden$={{thngs.length}}>
-      No thngs yet
+    <div class="empty-message" hidden$={{collections.length}}>
+      No collections yet
     </div>
 
-    <iron-list items="{{thngs}}" id="list" indexAs="id" selection-enabled>
+    <iron-list items="{{collections}}" id="list" indexAs="id" selection-enabled>
       <template>
-        <evt-thng-card thng="{{item}}"></evt-thng-card>
+        <evt-collection-card collection="{{item}}"></evt-collection-card>
       </template>
     </iron-list>
 
-    <paper-toast id="loadingFailed" text="Failed to load thngs"></paper-toast>
+    <paper-toast id="loadingFailed" text="Failed to load collections"></paper-toast>
   </template>
   <script>
-    EvtElements.ThngList = Polymer({
-      is: 'evt-thng-list',
+    EvtElements.CollectionList = Polymer({
+      is: 'evt-collection-list',
 
       properties: {
 
@@ -58,12 +58,12 @@
 
         if (!scope.loading && scope.user) {
           scope.set('loading', true);
-          scope.user.thng().read()
-            .then(function (thngs) {
-              scope.thngs = thngs;
+          scope.user.collection().read()
+            .then(function (collections) {
+              scope.collections = collections;
             })
             .catch(function() {
-
+              scope.$.loadingFailed.open();
             })
             .then(function() {
               scope.set('loading', false);

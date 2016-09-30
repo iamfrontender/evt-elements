@@ -16,16 +16,14 @@
     "evrythng"
   ],
   "author": "EVRYTHNG Team",
-  "license": "SEE LICENSE IN LICENSE.txt",
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "https://github.com/evrythng/evrythng.js/blob/master/LICENSE"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/iamfrontender/evt-elements/issues"
   },
-  "homepage": "https://github.com/iamfrontender/evt-elements#readme",
-  "dependencies": {
-    "async": "^1.5.0",
-    "chalk": "^1.1.1",
-    "gulp": "^3.9.0",
-    "htmlparser2": "^3.8.3",
-    "hydrolysis": "^1.19.3"
-  }
+  "homepage": "https://github.com/iamfrontender/evt-elements#readme"
 }

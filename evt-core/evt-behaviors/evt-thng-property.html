@@ -1,0 +1,67 @@
+<script>
+  /**
+   * Thng Property behavior.
+   *
+   * @behavior
+   */
+  EvtElements.behaviors.thngProperty = [ EvtElements.behaviors.thng, {
+
+    types: {
+      string: {
+        match: 'isString',
+        output: String,
+        debounce: 500
+      },
+
+      boolean: {
+        match: 'isBoolean',
+        output: Boolean
+      },
+
+      number: {
+        match: 'isNumber',
+        output: Number,
+        debounce: 300
+      }
+    },
+
+    /**
+     * Returns current property value.
+     *
+     * @param {String} name Name of property
+     * @returns {*}
+     * @private
+     */
+    _getPropertyValue: function(name) {
+      return this.get('thng.properties.' + name);
+    },
+
+
+    _getPropertyType: function(name) {
+      var value = this._getPropertyValue(name);
+      var typ = this._typ(value);
+      var base = this.types[typ] || this.types.string;
+      var type = {
+        typ: typ,
+        isString: false,
+        isNumber: false,
+        isBoolean: false,
+        debounce: base.debounce,
+        output: base.output
+      };
+
+      type[base.match] = true;
+
+      return type;
+    },
+
+    _isDirty: function() {
+      var thng = this._getPropertyValue(this.property);
+      var model = this.model.value;
+
+      return thng !== model;
+    }
+
+
+  }];
+</script>

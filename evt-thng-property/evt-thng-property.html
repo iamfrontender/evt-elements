@@ -1,0 +1,127 @@
+<link rel="import" href="../evt-core/evt-core.html">
+<link rel="import" href="../evt-styles/evt-styles.html">
+<link rel="import" href="../evt-iconset/evt-iconset.html">
+
+<link rel="import" href="../../bower-components/paper-styles/shadow.html">
+<link rel="import" href="../../paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../paper-input/paper-textarea.html">
+<link rel="import" href="../../paper-toast/paper-toast.html">
+<link rel="import" href="../../paper-styles/typography.html">
+
+<dom-module id="evt-thng-property">
+  <template>
+    <style include="evt-styles">
+      :host {
+        display: block;
+
+        width: calc(var(--evt-unit-xl) * 2);
+        height: calc(var(--evt-unit-xl) * 2);
+      }
+
+      label {
+        display: block;
+        font-weight: bolder;
+
+        @apply(--paper-font-common-nowrap);
+      }
+
+      container {
+        @apply(--layout-vertical);
+      }
+
+      container value-container {
+        @apply(--layout-flex);
+      }
+    </style>
+
+    <container>
+      <header>
+        <label>{{property}}</label>
+      </header>
+
+      <value-container>
+        <template is="dom-if" if="{{model.type.isString}}">
+          <paper-textarea no-label-float value="{{model.value}}"></paper-textarea>
+        </template>
+
+        <template is="dom-if" if="{{model.type.isBoolean}}">
+          <paper-toggle-button checked="{{model.value}}"></paper-toggle-button>
+        </template>
+
+        <template is="dom-if" if="{{model.type.isNumber}}">
+          <paper-input no-label-float type="number" value="{{model.value}}"></paper-input>
+        </template>
+      </value-container>
+    </container>
+
+    <paper-toast id="loginFailed" text="Thng properties update failed"></paper-toast>
+  </template>
+  <script>
+    Polymer({
+      is: 'evt-thng-property',
+
+      properties: {
+
+        thng: Object,
+        property: String,
+
+        model: {
+          type: Object,
+          computed: '_computeModel(thng, property)'
+        }
+      },
+
+      behaviors: [
+        EvtElements.behaviors.thngProperty,
+        EvtElements.behaviors.loader
+      ],
+
+      observers: [
+        '_onValueChanged(model.value)',
+        '_onThngPropertiesChanged(thng.properties.*)'
+      ],
+
+      _computeModel: function(thng, property) {
+        if (thng && property) {
+          return {
+            value: this._getPropertyValue(property),
+            type: this._getPropertyType(property)
+          };
+        }
+      },
+
+      _onThngPropertiesChanged: function(changes) {
+        if (changes.path === ('thng.properties.' + this.property)) {
+          if (changes.value !== this.model.value) {
+            this.set('model.value', changes.value);
+          }
+        }
+      },
+
+      _onValueChanged: function() {
+        if (this._isDirty()) {
+          if (this.model.type.debounce) {
+            this.debounce('update', this._doUpdate, this.model.type.debounce);
+          } else {
+            this._doUpdate();
+          }
+        }
+      },
+
+      _doUpdate: function() {
+        var scope = this;
+        var model = scope.model;
+
+        scope.set('loading', true);
+
+        scope.thng.property(scope.property).update(
+          model.type.output(model.value)
+        ).then(function() {
+          scope.set('loading', false);
+        }).catch(function() {
+          scope.$.loginFailed.open();
+        });
+      }
+    });
+  </script>
+</dom-module>

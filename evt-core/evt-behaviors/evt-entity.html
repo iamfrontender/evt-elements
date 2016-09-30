@@ -1,0 +1,50 @@
+<script>
+
+  EvtElements.behaviors.entity = [EvtElements.behaviors.objectProperties, {
+
+
+    /**
+     * Returns true if attached thng has any identifier
+     *
+     * @returns {boolean}
+     * @private
+     */
+    _hasIdentifiers: function () {
+      return !this._isEmpty('thng.identifiers');
+    },
+
+    /**
+     * Returns true if attached thng has any custom field
+     *
+     * @returns {boolean}
+     * @private
+     */
+    _hasCustomFields: function () {
+      return !this._isEmpty('thng.customFields');
+    },
+
+    _hasTags: function() {
+      return !this._isEmpty('thng.tags');
+    },
+
+    _listIdentifiers: function (obj) {
+      return this._abstractListProperty(obj, 'identifiers');
+    },
+
+    _listCustomFields: function (obj) {
+      return this._abstractListProperty(obj, 'customFields');
+    },
+
+    _abstractListProperty: function (obj, prop) {
+      var prop = (obj && obj[prop]) || {};
+
+      return Object.keys(prop).map(function (field) {
+        return {
+          name: field,
+          value: prop[field]
+        }
+      });
+    }
+
+  }]
+</script>

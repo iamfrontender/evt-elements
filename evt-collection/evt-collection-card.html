@@ -6,7 +6,7 @@
 
 <link rel="import" href="../evt-entity/evt-entity-passport.html">
 
-<dom-module id="evt-thng-card">
+<dom-module id="evt-collection-card">
   <template>
     <style include="iron-flex evt-styles">
       :host {
@@ -16,23 +16,22 @@
       evt-entity-passport {
         padding: var(--evt-unit-sm);
       }
-
     </style>
 
-    <evt-entity-passport entity="{{thng}}"></evt-entity-passport>
+    <evt-entity-passport entity="{{collection}}"></evt-entity-passport>
     <paper-ripple></paper-ripple>
 
   </template>
   <script>
     EvtElements.ThngCard = Polymer({
-      is: 'evt-thng-card',
+      is: 'evt-collection-card',
 
       behaviors: [
-        EvtElements.behaviors.thng
+        EvtElements.behaviors.collection
       ],
 
       factoryImpl: function(config) {
-        this.thng = config.thng;
+        this.collection = config.collection;
       }
     });
   </script>

@@ -3,107 +3,32 @@
    * Thng behavior.
    * Has abstract methods to retrieve the data values from thng model.
    *
-   * TODO: Extend this behavior from access.
-   * @remark requires EvtElements.behaviors.access
-   *
    * @behavior
    */
-  EvtElements.behaviors.thng = {
+  EvtElements.behaviors.thng = [ EvtElements.behaviors.entity, {
 
     /**
-     * Caches all requested properties.
-     *
-     * @type {Object}
-     */
-    _propertyCache: {},
-
-    /**
-     * Returns true if thng on this element has at least one property.
-     * Useful for hidden$ and other attributes with computed bindings.
-     *
-     * @returns {boolean}
-     */
-    hasProperties: function() {
-      if (this.thng) {
-        return this.listProperties().length !== 0;
-      }
-    },
-
-    /**
-     * Lists the properties of this thng.
-     *
-     * @returns {String[]}
-     */
-    listProperties: function() {
-      if (this.thng && this._keys) {
-        return this._keys(this, 'thng.properties', []);
-      }
-    },
-
-    /**
-     * Returns a unified property DTO, useful for attaching to nested elements.
-     *
-     * @param {String} name property name, i.e. one of thng.properties keys.
-     *
-     * @returns {name: string, value: *, meta: object}
-     */
-    getProperty: function(name) {
-      var raw, prop;
-
-      // Are we instantiated yet?
-      if (this.thng) {
-
-        // Are we have this property cached?
-        if (this._propertyCache[name]) {
-
-          // yep, return it
-          prop = this._propertyCache[name];
-
-        } else {
-          // nope, compute it
-          raw = this.thng.properties[name];
-
-          // If value is defined
-          if (this._isValue(raw)) {
-            // compute the property and return it
-            prop = this._propertyCache[name] = {
-              name: name,
-              value: raw,
-              meta: this._getMeta(name)
-            };
-          }
-
-          // There is nothing to return otherwise.
-        }
-
-        return prop;
-      }
-    },
-
-    /**
-     * Checks whether value is defined, i.e. not null and not undefined.
-     * @param {*} value
-     *
-     * @returns {boolean}
-     */
-    _isValue: function(value) {
-      return !_.isNull(value) && !_.isUndefined(value);
-    },
-
-    /**
-     * Retrieves the meta for property if any.
-     *
-     * @param {String} name Name of the property to look meta for (metaphor :D)
-     *
+     * Lists current slice of thng properties
      * @returns {*}
+     * @private
      */
-    _getMeta: function(name) {
-      // TODO: Abstract Data Structures descriptors??
-      // Yet pretty heavy and complex, will allow to support any count of data formats.
-      // Not reliable if data structure will be fixed any time soon.
-      if (this.thng) {
-        return _.get(this.thng, 'customFields.' + name + '.values');
-      }
+    _listProperties: function() {
+      return Object.keys(
+        this.get('thng.properties') || {}
+      );
+    },
+
+    /**
+     * Returns current property value.
+     *
+     * @param {String} name Name of property
+     * @returns {*}
+     * @private
+     */
+    _getPropertyValue: function(name) {
+      return this.get('thng.properties.' + name);
     }
-  };
+
+
+  }];
 </script>

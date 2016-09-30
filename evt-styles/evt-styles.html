@@ -1,0 +1,34 @@
+<link rel="import" href="../../paper-styles/color.html">
+
+<dom-module id="evt-styles">
+  <template>
+    <style>
+      :root {
+        --evt-unit-xs: 4px;
+        --evt-unit-sm: 8px;
+        --evt-unit-md: 16px;
+        --evt-unit-lg: 32px;
+        --evt-unit-xl: 64px;
+
+        --evt-image-placeholder-background: var(--paper-grey-200);
+        --evt-details-background: var(--paper-grey-200);
+
+        --evt-circle: {
+          border-radius: 50%;
+        };
+      }
+
+      .circle {
+        border-radius: 50%;
+      }
+
+      .evt-entity-image {
+        @apply(--evt-circle);
+
+        width: var(--evt-unit-xl);
+        height: var(--evt-unit-xl);
+        background-color: var(--evt-image-placeholder-background);
+      }
+    </style>
+  </template>
+</dom-module>

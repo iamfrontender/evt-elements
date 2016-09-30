@@ -1,0 +1,25 @@
+<link rel="import" href="../evt-core/evt-core.html">
+<link rel="import" href="../evt-styles.html">
+
+<dom-module id="evt-chip">
+  <template>
+    <style include="evt-styles">
+      :host {
+        --evt-chip-color: var(--paper-grey-200);
+        display: inline-block;
+
+        background-color: var(--evt-chip-color);
+        padding: var(--evt-unit-xs) var(--evt-unit-sm);
+        border-radius: var(--evt-unit-xl);
+        margin-right: var(--evt-unit-xs);
+        margin-bottom: var(--evt-unit-xs);
+      }
+    </style>
+    <content></content>
+  </template>
+  <script>
+    EvtElements.EvtChip = Polymer({
+      is: 'evt-chip'
+    });
+  </script>
+</dom-module>

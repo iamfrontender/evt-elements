@@ -9,7 +9,7 @@
 <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../iron-media-query/iron-media-query.html">
 
-<dom-module id="evt-thng-full">
+<dom-module id="evt-collection-full">
   <template>
     <style include="evt-styles iron-flex">
       :host {
@@ -38,35 +38,35 @@
 
     <iron-media-query query="(max-width: 600px)" query-matches="{{mobile}}"></iron-media-query>
 
-    <evt-entity-passport entity="{{thng}}"></evt-entity-passport>
+    <evt-entity-passport entity="{{collection}}"></evt-entity-passport>
 
     <section mobile$="{{mobile}}" class="traceable-properties">
-      <evt-entity-identifiers flex hidden$="{{!_hasIdentifiers(thng)}}" entity="{{thng}}"></evt-entity-identifiers>
-      <evt-entity-tags flex hidden$="{{!_hasTags(thng)}}" entity="{{thng}}"></evt-entity-tags>
+      <evt-entity-identifiers flex hidden$="{{!_hasIdentifiers(collection)}}" entity="{{collection}}"></evt-entity-identifiers>
+      <evt-entity-tags flex hidden$="{{!_hasTags(collection)}}" entity="{{collection}}"></evt-entity-tags>
     </section>
 
-    <section class="value-properties" hidden$="{{!_hasCustomFields(thng)}}">
+    <section class="value-properties" hidden$="{{!_hasCustomFields(collection)}}">
       <hr>
-      <evt-entity-custom-fields entity="{{thng}}"></evt-entity-custom-fields>
+      <evt-entity-custom-fields entity="{{collection}}"></evt-entity-custom-fields>
     </section>
   </template>
 
   <script>
     EvtElements.ThngFull = Polymer({
-      is: 'evt-thng-full',
+      is: 'evt-collection-full',
 
       behaviors: [
-        EvtElements.behaviors.thng
+        EvtElements.behaviors.collection
       ],
 
       properties: {
-        thng: {
+        collection: {
           type: Object
         }
       },
 
       factoryImpl: function(config) {
-        this.thng = config.thng;
+        this.collection = config.collection;
       }
     });
   </script>

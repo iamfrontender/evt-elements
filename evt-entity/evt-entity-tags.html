@@ -1,0 +1,47 @@
+<link rel="import" href="../evt-core/evt-core.html">
+<link rel="import" href="../evt-styles/evt-styles.html">
+<link rel="import" href="../evt-chip/evt-chip.html">
+<link rel="import" href="../evt-iconset/evt-iconset.html">
+
+<link rel="import" href="../../paper-styles/typography.html">
+<link rel="import" href="../../iron-icon/iron-icon.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="evt-entity-tags">
+  <template>
+    <style include="evt-styles">
+      :host {
+        display: block;
+      }
+
+      iron-icon {
+        margin: var(--evt-unit-sm);
+      }
+
+      section {
+        margin-left: var(--evt-unit-sm);
+        margin-top: var(--evt-unit-xs);
+      }
+    </style>
+
+    <header>
+      <iron-icon icon="evt:tag"></iron-icon>
+      <span>Tags</span>
+    </header>
+
+    <section>
+      <template is="dom-repeat" items="{{entity.tags}}">
+        <evt-chip>{{item}}</evt-chip>
+      </template>
+    </section>
+  </template>
+  <script>
+    EvtElements.EvtEntityTags = Polymer({
+      is: 'evt-entity-tags',
+
+      properties: {
+        entity: Object
+      }
+    });
+  </script>
+</dom-module>
