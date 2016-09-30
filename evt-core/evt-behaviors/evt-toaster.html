@@ -1,0 +1,14 @@
+<link rel="import" href="../../../paper-toast/paper-toast.html">
+
+<script>
+  EvtElements.behaviors.toaster = {
+    openToast: function (text) {
+      if (!this.toastEl) {
+        this.toast = document.createElement('paper-toast');
+      }
+
+      this.toast.text = text;
+      this.toast.open();
+    }
+  };
+</script>

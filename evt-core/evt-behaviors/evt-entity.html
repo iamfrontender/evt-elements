@@ -10,7 +10,7 @@
      * @private
      */
     _hasIdentifiers: function () {
-      return !this._isEmpty('thng.identifiers');
+      return !this._isEmpty(this.name + '.identifiers');
     },
 
     /**
@@ -20,11 +20,11 @@
      * @private
      */
     _hasCustomFields: function () {
-      return !this._isEmpty('thng.customFields');
+      return !this._isEmpty(this.name + '.customFields');
     },
 
     _hasTags: function() {
-      return !this._isEmpty('thng.tags');
+      return !this._isEmpty(this.name + '.tags');
     },
 
     _listIdentifiers: function (obj) {

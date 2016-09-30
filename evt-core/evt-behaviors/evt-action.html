@@ -1,6 +1,25 @@
 <script>
   EvtElements.behaviors.action = {
 
+    readActionTypes: function() {
+      var scope = this;
+
+      if (scope.user) {
+        scope.set('loading', true);
+
+        scope.user.actionType().read()
+          .then(function(res) {
+            scope.actionTypes = res;
+          })
+          .catch(function(err) {
+            scope.actionTypes = [];
+          })
+          .then(function() {
+            scope.set('loading', false);
+          })
+      }
+    },
+
     getActionName: function (action) {
       return action.customFields.displayname || action.name;
     },

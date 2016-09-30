@@ -14,7 +14,7 @@
     </section>
 
     <template is="dom-repeat" items="{{actionTypes}}" as="action">
-      <evt-thng-action thng="{{thng}}" action="{{action}}" user="{{user}}" on-action-created="_onActionCreated"></evt-thng-action>
+      <evt-thng-action thng="{{thng}}" type="{{action.name}}" user="{{user}}" on-action-created="_onActionCreated"></evt-thng-action>
     </template>
 
     <paper-toast id="actionToast" text="{{actionToastText}}"></paper-toast>

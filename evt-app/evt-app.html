@@ -66,7 +66,8 @@
         'settings': '_setup',
         'settings.apiKey': '_onApiKeyChanged',
         'settings.apiUrl': '_onApiUrlChanged',
-        'settings.localhostUrl': '_onLocalhostUrlChanged'
+        'settings.localhostUrl': '_onLocalhostUrlChanged',
+        'settings.remote': '_onRemoteChanged'
       },
 
       _setup: function() {
@@ -121,8 +122,7 @@
       _onApiUrlChanged: function(apiUrl) {
         if (apiUrl) {
           EVT.setup({
-            apiUrl: apiUrl,
-            timeout: 1000
+            apiUrl: apiUrl
           });
         }
       },
@@ -312,6 +312,12 @@
       _onLocalhostUrlChanged: function(changes) {
         EVT.setup({
           localhostUrl: changes.value
+        });
+      },
+
+      _onRemoteChanged: function(changes) {
+        EVT.Hub.setup({
+          remote: changes.value
         });
       }
     });
